@@ -31,6 +31,10 @@ app.use(
 );
 app.use(express.urlencoded({ extended: true }));
 
+app.use("/api/health", (req, res) => {
+  res.status(200).json({ success: true, message: "API is running" });
+});
+
 // handle undefined Routes
 app.use("*", (req, res, next) => {
   const err = new AppError(404, "fail", "undefined route");
