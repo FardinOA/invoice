@@ -5,6 +5,9 @@ import cors from "cors";
 import AppError from "../utils/appError.js";
 import globalError from "../utils/globalError.js";
 
+// routes import
+import userRoutes from "../routes/userRoutes.js";
+
 // define the application
 const app = express();
 
@@ -35,6 +38,9 @@ app.use("/api/health", (req, res) => {
   res.status(200).json({ success: true, message: "API is running" });
 });
 
+// define routes
+app.use("/api/v1/users", userRoutes);
+
 // handle undefined Routes
 app.use("*", (req, res, next) => {
   const err = new AppError(404, "fail", "undefined route");
@@ -42,5 +48,4 @@ app.use("*", (req, res, next) => {
 });
 
 app.use(globalError);
-
 export default app;

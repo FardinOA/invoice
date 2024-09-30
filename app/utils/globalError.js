@@ -1,11 +1,27 @@
+// middleware/globalError.js
+
+import AppError from "./appError.js";
+
 const globalError = (err, req, res, next) => {
   // Set default values for statusCode and status
   err.statusCode = err.statusCode || 500;
   err.status = err.status || "error";
 
+  // MongoDB invalid ObjectId error (CastError)
+  if (err.name === "CastError") {
+    const message = `Resource not found. Invalid: ${err.path}`;
+    err = new AppError(400, message);
+  }
+  console.log(err.code);
+  // MongoDB duplicate key error
+  if (err.code === 11000) {
+    const message = `This ${Object.keys(err.keyValue)} is already exists`;
+    err = new AppError(400, message);
+  }
+  console.log(err);
+  // Development environment error response
   if (process.env.NODE_ENV === "development") {
-    // In development, show the full error details
-    return res.status(err.statusCode).json({
+    return res.status(err.status).json({
       status: err.status,
       error: err, // Full error object for debugging
       message: err.message, // Error message
@@ -13,25 +29,21 @@ const globalError = (err, req, res, next) => {
     });
   }
 
+  // Production environment error response
   if (process.env.NODE_ENV === "production") {
-    // Operational, trusted errors: send a friendly message to the client
+    // For operational errors, send friendly messages
     if (err.isOperational) {
-      return res.status(err.statusCode).json({
+      return res.status(err.status).json({
         status: err.status,
         message: err.message,
       });
     }
-    // Programming or other unknown errors: don't leak error details
-    else {
-      // Log the error
-      console.error("ERROR 💥", err);
 
-      // Send generic message to the client
-      return res.status(500).json({
-        status: "error",
-        message: "Something went very wrong!",
-      });
-    }
+    // Send a generic message
+    return res.status(500).json({
+      status: "error",
+      message: "Something went very wrong!",
+    });
   }
 };
 
