@@ -12,13 +12,13 @@ const globalError = (err, req, res, next) => {
     const message = `Resource not found. Invalid: ${err.path}`;
     err = new AppError(400, message);
   }
-  console.log(err.code);
+
   // MongoDB duplicate key error
   if (err.code === 11000) {
     const message = `This ${Object.keys(err.keyValue)} is already exists`;
     err = new AppError(400, message);
   }
-  console.log(err);
+
   // Development environment error response
   if (process.env.NODE_ENV === "development") {
     return res.status(err.status).json({
