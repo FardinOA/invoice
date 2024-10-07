@@ -12,7 +12,12 @@ import userRoutes from "../routes/userRoutes.js";
 const app = express();
 
 // Allow Cross-Origin requests
-app.use(cors());
+app.use(
+  cors({
+    origin: ["http://localhost/5173"],
+    credentials: true,
+  })
+);
 
 // Set security HTTP headers
 app.use(helmet());
