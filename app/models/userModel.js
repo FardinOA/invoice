@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import validator from "validator";
 import bcrypt from "bcryptjs";
-
+import jwt from "jsonwebtoken";
 const userSchema = new mongoose.Schema(
   {
     name: {
@@ -35,6 +35,7 @@ const userSchema = new mongoose.Schema(
       default: true,
       select: false,
     },
+    tokens: [{ type: Object }],
   },
   {
     timestamps: true,
@@ -57,11 +58,24 @@ userSchema.pre("save", async function (next) {
 });
 
 // This function will be available on all documents in a certain collection
-userSchema.methods.correctPassword = async function (
-  typedPassword,
-  originalPassword
-) {
-  return await bcrypt.compare(typedPassword, originalPassword);
+userSchema.methods.correctPassword = async function (typedPassword) {
+  return await bcrypt.compare(typedPassword, this.password);
+};
+
+// This function will generate a JWT token for a user
+userSchema.methods.generateToken = async function () {
+  const payload = {
+    id: this._id,
+    name: this.name,
+    email: this.email,
+    role: this.role,
+    active: this.active,
+  };
+
+  const token = jwt.sign(payload, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRE,
+  });
+  return token;
 };
 
 const User = mongoose.model("User", userSchema);
