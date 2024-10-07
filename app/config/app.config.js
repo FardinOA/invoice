@@ -11,13 +11,18 @@ import userRoutes from "../routes/userRoutes.js";
 // define the application
 const app = express();
 
+var whitelist = ["http://localhost:5173"];
+var corsOptions = {
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+};
 // Allow Cross-Origin requests
-app.use(
-  cors({
-    origin: ["http://localhost:5173"],
-    credentials: true,
-  })
-);
+app.use(cors(corsOptions));
 
 // Set security HTTP headers
 app.use(helmet());
