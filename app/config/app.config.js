@@ -25,14 +25,6 @@ var corsOptions = {
   },
   optionSuccessStatus: 200,
   credential: true,
-  origin: function (origin, callback) {
-    if (whitelist.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-  credential: true,
 };
 // Allow Cross-Origin requests
 app.use(cors(corsOptions));
