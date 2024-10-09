@@ -22,7 +22,11 @@ var corsOptions = {
   credential: true,
 };
 // Allow Cross-Origin requests
-app.use(cors());
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 
 // Set security HTTP headers
 app.use(helmet());
