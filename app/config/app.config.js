@@ -23,6 +23,7 @@ var corsOptions = {
       callback(new Error("Not allowed by CORS"));
     }
   },
+  optionSuccessStatus: 200,
   credential: true,
 };
 // Allow Cross-Origin requests
