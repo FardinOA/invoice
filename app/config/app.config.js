@@ -24,7 +24,7 @@ var corsOptions = {
 // Allow Cross-Origin requests
 app.use(
   cors({
-    origin: "*",
+    origin: whitelist,
   })
 );
 
