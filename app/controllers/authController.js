@@ -41,7 +41,6 @@ const signIn = async (req, res, next) => {
     }
     const user = await User.findOne({ email }).select("+password");
     if (!user || !(await user.correctPassword(password))) {
-      console.log("here");
       return next(new AppError(401, "Invalid email or password"));
     }
 
