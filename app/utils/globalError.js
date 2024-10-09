@@ -29,7 +29,7 @@ const globalError = (err, req, res, next) => {
     const message = "Invalid token. Please login again.";
     err = new AppError(401, message);
   }
-
+  console.log("err", err);
   // Development environment error response
   if (process.env.NODE_ENV === "development") {
     return res.status(err.status).json({
