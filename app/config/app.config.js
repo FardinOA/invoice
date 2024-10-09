@@ -13,7 +13,7 @@ const app = express();
 
 var whitelist = [
   "http://localhost:5173",
-  "https://invoice-frontend-git-afnan-dev-fardinoas-projects.vercel.app",
+  "https://invoice-frontend-6usm2buh1-fardinoas-projects.vercel.app",
 ];
 var corsOptions = {
   origin: function (origin, callback) {
@@ -24,6 +24,14 @@ var corsOptions = {
     }
   },
   optionSuccessStatus: 200,
+  credential: true,
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   credential: true,
 };
 // Allow Cross-Origin requests
