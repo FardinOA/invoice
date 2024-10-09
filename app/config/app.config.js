@@ -11,8 +11,23 @@ import userRoutes from "../routes/userRoutes.js";
 // define the application
 const app = express();
 
+var whitelist = [
+  "http://localhost:5173",
+  "https://invoice-frontend-6usm2buh1-fardinoas-projects.vercel.app",
+];
+var corsOptions = {
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  optionSuccessStatus: 200,
+  credential: true,
+};
 // Allow Cross-Origin requests
-app.use(cors());
+app.use(cors(corsOptions));
 
 // Set security HTTP headers
 app.use(helmet());
